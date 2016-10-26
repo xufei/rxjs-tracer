@@ -1,0 +1,32 @@
+{
+  "name": "rxjs-tracer",
+  "version": "0.1.0",
+  "description": "A RxJS data tracer",
+  "author": "xufei <xu.fei@outlook.com>",
+  "main": "dist/cjs/app.js",
+  "jsnext:main": "dist/es6/app.js",
+  "typings": "dist/cjs/app.d.ts",
+  "scripts": {
+    "build_cjs": "rm -rf dist/cjs && tsc src/index.ts -m commonjs --outDir dist/cjs --sourcemap --inlineSources --target ES5 -d --diagnostics --pretty --noImplicitAny --noImplicitReturns --experimentalDecorators --suppressImplicitAnyIndexErrors --moduleResolution node --noEmitHelpers",
+    "build_es6": "rm -rf dist/es6 && tsc src/index.ts -m es2015 --outDir dist/es6 --sourcemap --inlineSources --target ES5 -d --diagnostics --pretty --noImplicitAny --noImplicitReturns --experimentalDecorators --suppressImplicitAnyIndexErrors --moduleResolution node --noEmitHelpers",
+    "build_bundle": "rm -rf dist/bundle/rx-tracer.umd.js && ts-node ./tools/tasks/bundle.tracer.ts",
+    "build_all": "rm -rf dist && mkdir dist && mkdir dist/bundle && npm run build_es6 && npm run build_cjs && npm run build_bundle",
+    "lint": "tslint ./src/**/*.ts ./test/unit/**/*.ts"
+  },
+  "dependencies": {
+    "core-js": "^2.4.1",
+    "rxjs": "^5.0.0-rc.1"
+  },
+  "devDependencies": {
+    "@types/node": "^6.0.45",
+    "@types/core-js": "^0.9.34",
+    "google-closure-compiler-js": "^20160916.0.0",
+    "rollup": "^0.36.1",
+    "rollup-plugin-alias": "^1.2.0",
+    "rollup-plugin-commonjs": "^5.0.4",
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "ts-node": "^1.6.0",
+    "tslint": "^3.15.1",
+    "typescript": "^2.0.3"
+  }
+}

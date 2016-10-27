@@ -5,9 +5,10 @@ import { Subscriber } from 'rxjs/Subscriber'
 import { Tracker } from './tracker'
 import { TrackerTreeNode, TrackerTreeNodeData } from './tracker-node'
 
-window['Observable'] = Observable
 const subject$ = new Subject()
-window['RxTrackerData'] = subject$
+const ctx = typeof global === 'undefined' ? window : global
+ctx['Observable'] = Observable
+ctx['RxTrackerData'] = subject$
 
 const trackerMap = {}
 

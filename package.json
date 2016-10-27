@@ -1,6 +1,6 @@
 {
   "name": "rxjs-tracer",
-  "version": "0.0.9",
+  "version": "0.0.1",
   "description": "A simple RxJS data tracer",
   "author": "xufei <xu.fei@outlook.com>",
   "main": "dist/cjs/index.js",

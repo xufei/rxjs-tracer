@@ -12,8 +12,6 @@ export function bundle (entry: string, output: string, name: string, ise2e?: boo
   if (!ise2e) {
     plugins = [
       alias({
-        // 'isomorphic-fetch': path.join(process.cwd(), 'node_modules/whatwg-fetch/fetch.js'),
-        // 'engine.io-client': path.join(process.cwd(), 'node_modules/engine.io-client/engine.io.js')
       }),
       nodeResolve({
         jsnext: false,

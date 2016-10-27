@@ -58,6 +58,10 @@ const oldSubscribe = Observable['prototype']['subscribe']
   return oldSubscribe.apply(this, args)
 }
 
+// 跟踪一个Observable，返回结果是一个Subject，订阅它就可以获取之后这个Observable数据变动的情况了
+// 目前只支持跟踪一个Observable
+// 跟踪出来的数据结构是树的形式，并且，每个节点上都计算好了纵向的深度，还有横向的位置信息
+// 直接用缩放比例代入就可以展示成图形了，或者不用这些信息，只用层级结构展示成树也行
 export function traceRx(o: Observable<any>): Subject<any> {
   let max = 0
   let min = 0
@@ -126,6 +130,7 @@ export function traceRx(o: Observable<any>): Subject<any> {
   }
 }
 
+// 调整布局信息
 function resize(r: TrackerTreeNodeData, offset: number) {
   r.index += offset
   if (r.children) {

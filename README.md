@@ -12,12 +12,24 @@ and use `traceRx` function in code, both TypeScript and ES6 are OK.
 import { Observable, Subject } from 'rxjs'
 import { traceRx } from 'rxjs-tracer'
 
-const arr = Observable.interval(5000).take(5)
-const A$ = arr
-  .map(num => Observable.of(num).delay(1000))
-  .mergeAll()
+const A$ = Observable.interval(5000).take(5)
+const B$ = Observable.of(7)
+const C$ = Observable.combineLatest(A$, B$)
+	.map(arr => {
+    let [a, b] = arr
+    return a + b
+  })
 
-traceRx(A$).subscribe(data => console.log('log', JSON.stringify(data)))
+const D$ = new Subject<number>()
+const E$ = Observable.combineLatest(C$, D$)
+	.map(arr => {
+    let [a, b] = arr
+    return a * b
+  })
 
-A$.subscribe(num => console.log(num))
+traceRx(E$).subscribe(data => console.log('log', JSON.stringify(data)))
+
+E$.subscribe(num => console.log(num))
+
+D$.next(5)
 ```

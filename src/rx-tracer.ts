@@ -17,8 +17,9 @@ function getId() {
   return `id${counter++}`
 }
 
-const oldSubscribe = Observable['prototype']['subscribe']
-(<any>Observable['prototype'])['subscribe'] = function (observerOrNext: any, error?:any, complete?:() => void) {
+const prototype: any = Observable['prototype']
+const oldSubscribe = prototype['subscribe']
+prototype['subscribe'] = function (observerOrNext: any, error?:any, complete?:() => void) {
   const id = this.__id
   let args = [].slice.call(arguments)
 

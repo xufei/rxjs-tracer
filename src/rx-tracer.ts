@@ -65,78 +65,60 @@ prototype['subscribe'] = function (observerOrNext: any, error?:any, complete?:()
 // 跟踪出来的数据结构是树的形式，并且，每个节点上都计算好了纵向的深度，还有横向的位置信息
 // 直接用缩放比例代入就可以展示成图形了，或者不用这些信息，只用层级结构展示成树也行
 export function traceRx(o: Observable<any>): Subject<any> {
-  let max = 0
-  let min = 0
+  let root = trace(o)
 
-  let root = trace(o, 0, 1)
-  min = - Math.min(min, 0)
-
-  const tree = resize(root, min)
-
-  trackerMap[o['__id']].tree = tree
+  trackerMap[o['__id']].tree = root
   trackerMap[o['__id']].subject = subject$
 
   return subject$
-
-  function trace(o: Observable<any>, depth: number, index: number) {
-    if (typeof o === 'object' && !o['__id']) {
-      o['__id'] = getId()
-    }
-
-    max = Math.max(max, index)
-    min = Math.min(min, index)
-
-    let result: TrackerTreeNodeData
-
-    if (trackerMap[o['__id']]) {
-      result = trackerMap[o['__id']].data
-    } else {
-      result = {
-        name: o.constructor.name.replace('Observable', '$')
-      }
-    }
-
-    let node = new TrackerTreeNode(result, depth, index)
-
-    if (typeof o === 'object') {
-      if (!trackerMap[o['__id']]) {
-        trackerMap[o['__id']] = new Tracker(o, result)
-      }
-      node.id = o['__id']
-    } else {
-      result.value = o
-    }
-
-    if (o._isScalar) {
-      result.value = o['value']
-    }
-
-    if (o['operator']) {
-      result.operator = o['operator'].constructor.name.replace('Operator', '')
-    }
-
-    if (o['source']) {
-      let child = trace(o['source'], depth + 1, index)
-      node.addChild(child)
-    }
-
-    if (o['array']) {
-      o['array'].forEach((v: Observable<any>, i:number) => {
-        let child = trace(v, depth + 1, index + i + 1 - (o['array'].length + 1) / 2)
-        node.addChild(child)
-        return child
-      })
-    }
-
-    return node
-  }
 }
 
-// 调整布局信息
-function resize(r: TrackerTreeNodeData, offset: number) {
-  r.index += offset
-  if (r.children) {
-    r.children = r.children.map(child => resize(child, offset))
+function trace(o: Observable<any>) {
+  if (typeof o === 'object' && !o['__id']) {
+    o['__id'] = getId()
   }
-  return r
+
+  let result: TrackerTreeNodeData
+
+  if (trackerMap[o['__id']]) {
+    result = trackerMap[o['__id']].data
+  } else {
+    result = {
+      name: o.constructor.name.replace('Observable', '$')
+    }
+  }
+
+  let node = new TrackerTreeNode(result)
+
+  if (typeof o === 'object') {
+    if (!trackerMap[o['__id']]) {
+      trackerMap[o['__id']] = new Tracker(o, result)
+    }
+    node.id = o['__id']
+  } else {
+    result.value = o
+  }
+
+  if (o._isScalar) {
+    result.value = o['value']
+  }
+
+  if (o['operator']) {
+    result.operator = o['operator'].constructor.name.replace('Operator', '')
+  }
+
+  if (o['source']) {
+    let child = trace(o['source'])
+    node.addChild(child)
+  }
+
+  if (o['array']) {
+    o['array'].forEach((v: Observable<any>, i:number) => {
+      let child = trace(v)
+      node.addChild(child)
+      return child
+    })
+  }
+
+  return node
 }

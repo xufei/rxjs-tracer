@@ -2,8 +2,6 @@ export interface TrackerTreeNodeData {
   id?: string
   name?: string
 	value?: any
-  depth?: number
-  index?: number
   operator?: string
   children?: TrackerTreeNodeData[]
 }
@@ -16,15 +14,10 @@ export interface TrackerTreeNodeData {
 export class TrackerTreeNode {
   id: string
 	data: any
-  depth: number	// 这个节点在第几层
-  index: number // 这个节点在同一级中排的位置
   children: TrackerTreeNode[]
 
-  constructor(data: any, depth: number, index: number) {
+  constructor(data: any) {
     this.data = data
-    this.depth = depth
-    this.index = index
-
     this.children = []
   }
 
@@ -47,10 +40,7 @@ export class TrackerTreeNode {
   raw() {
     const data: TrackerTreeNodeData = {
       id: this.id,
-      depth: this.depth,
-      index: this.index,
-      value: this.value(),
-      children: []
+      value: this.value()
     }
     if (this.children && this.children.length > 0) {
       data.children = this.children.map(node => {

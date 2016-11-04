@@ -62,15 +62,16 @@ prototype['subscribe'] = function (observerOrNext: any, error?:any, complete?:()
 
 // 跟踪一个Observable，返回结果是一个Subject，订阅它就可以获取之后这个Observable数据变动的情况了
 // 目前只支持跟踪一个Observable
-// 跟踪出来的数据结构是树的形式，并且，每个节点上都计算好了纵向的深度，还有横向的位置信息
-// 直接用缩放比例代入就可以展示成图形了，或者不用这些信息，只用层级结构展示成树也行
+// 跟踪出来的数据结构是树的形式，可以直接拿去展示成树
 export function traceRx(o: Observable<any>): Subject<any> {
-  let root = trace(o)
-
+  const root = trace(o)
   trackerMap[o['__id']].tree = root
-  trackerMap[o['__id']].subject = subject$
 
-  return subject$
+  const subject = new Subject<any>()
+  trackerMap[o['__id']].subject = subject
+  subject.subscribe(subject$)
+
+  return subject
 }
 
 function trace(o: Observable<any>) {

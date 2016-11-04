@@ -1,7 +1,7 @@
 export interface TrackerTreeNodeData {
   id?: string
   name?: string
-	value?: any
+  value?: any
   operator?: string
   children?: TrackerTreeNodeData[]
 }
@@ -13,7 +13,7 @@ export interface TrackerTreeNodeData {
 // raw() 方法用于提取关键数据，不存放无效引用，并且，提取的时候数据是复制的，可以不担心后续修改会影响原始数据
 export class TrackerTreeNode {
   id: string
-	data: any
+  data: any
   children: TrackerTreeNode[]
 
   constructor(data: any) {

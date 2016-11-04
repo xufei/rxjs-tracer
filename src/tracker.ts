@@ -9,7 +9,7 @@ import { TrackerTreeNode } from './tracker-node'
 // 这样，每次这个 Observable 被设置新值的时候，它可以往 Subject 里面发数据
 // 这个 Subject 发出去的数据就是树状的，给外部跟踪图形用
 export class Tracker {
-	source: Observable<any>
+  source: Observable<any>
   data: any
   subject?: Subject<any>
   tree: TrackerTreeNode
